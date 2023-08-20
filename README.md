@@ -2,7 +2,7 @@
 storyForge
 Lablab Hackathon : https://lablab.ai/event/autonomous-agents-hackathon/storyforge
 
-Python Script : <br> Python function <br>
+Python Script : <br> <br>
 Langchain : prompt_template and interaction with LLM (OPENAI - GPT-3.5) <br>
 ElevenLabs : Text to voice ( or pyttsx3 for free TTS) <br>
 Stable Diffusion : Text to image <br>
