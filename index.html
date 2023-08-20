@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>storyForge</title>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+
+    <style>
+    /* Réinitialisation de base */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Arial', sans-serif;
+    }
+
+    body {
+        background-color: #f4f4f4;
+        color: #333;
+        font-size: 16px;
+        line-height: 1.5;
+    
+    }
+
+    .parent-div {
+            width: 100%; /* Largeur totale de la fenêtre de visualisation */
+            background-color: gray; /* Couleur de fond pour mieux visualiser */
+            text-align: center; /* Centrage horizontal des éléments inline ou inline-block */
+        }
+
+        .centered-div {
+            display: inline-block; /* Rend la div comme un élément inline pour le centrage */
+            width: 50%; /* Largeur de la div centrée */
+            padding: 20px;
+            background-color: gray; /* Couleur de fond pour mieux visualiser */
+            color: #fff; /* Couleur du texte */
+            margin: 5px;
+        }
+    /* Centrer le contenu */
+    body > div {
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Boutons */
+    button {
+        padding: 10px 20px;
+        background-color: #007BFF;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    button:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+    }
+
+    /* Input */
+    input[type="text"] {
+        padding: 10px;
+        width: 100%;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    /* Résultats */
+    #results {
+        margin-top: 20px;
+    }
+
+    #results > div {
+        margin-bottom: 20px;
+    }
+
+    /* Vidéo */
+    video {
+        max-width: 100%;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        margin-top: 20px;
+        font-size: 20px;
+        color: #007BFF;
+    }
+</style>
+
+    </style>
+</head>
+<body>
+
+    <div class="parent-div">
+        <div class="centered-div">
+            <h1 .id="center-div" >storyForge</h1>
+        </div>
+    </div>
+
+    <div class="parent-div">
+        <div class="centered-div">
+            <br> <br>
+            <p>
+                balbalbalalbalablblal 
+                balbalbalalbalablblal 
+                balbalbalalbalablblal 
+                balbalbalalbalablblal 
+                balbalbalalbalablblal 
+            </p>
+            <br> <br>
+            <button id="loginButton" style="background-color:white; color:black" onclick="loginFirebase()">Login Firebase</button> <br><br>
+            <button disabled id="payButton" style="background-color:white; color:black"  >Buy Token</button>
+            <br> 
+<br>
+            <p>
+                <div id="userIdDisplay">Pas connecté</div>
+                <div id="userTokenDisplay">Token : 0</div>
+        
+               </p> 
+        </div>
+    </div>
+    <div>
+   blablalbalbbalbalblabl 
+    </div>
+
+       <div class="parent-div">
+        <div class="centered-div">
+            <h1>Prompt input</h1>
+            What is your message :
+            <textarea  id="messageInput" rows="4" cols="50" placeholder="your message"></textarea>
+            <br>
+            What is the characteristics of story : 
+            <textarea id="caraInput" rows="4" cols="50" placeholder="characteriscts of story"></textarea>
+            <br>
+            What is the general mood and style : 
+            <textarea id="moodInput" rows="4" cols="50" placeholder=" mood and style"></textarea>
+            <br>
+            What is the  : 
+            <textarea id="aaudienceudienceInput" rows="4" cols="50" placeholder="your audience, your public"></textarea>
+            <br><br>
+            <button style="background-color:white; color:black"  id="sendButton" onclick="sendToFirebase()" disabled>Generate video  <br> (low quality voice)</button>
+           <br> <br> 
+            <button disabled style="background-color:white; color:black"  id="sendButton" onclick="sendToFirebase()" disabled>Generate video <br> (high quality voice)</button>
+
+        </div>
+    </div>
+
+
+
+<br>    
+<div class="parent-div">
+    <div class="centered-div">
+        <h1  >Previous videos   </h1>
+    </div>
+</div>
+<div id="results">
+</div>
+
+    <script >
+        // Configuration de Firebase
+var firebaseConfig = {
+//need to put yours
+};
+
+var userid = "";
+firebase.initializeApp(firebaseConfig);
+    var database = firebase.database();
+    function loginFirebase() {
+            var provider = new firebase.auth.GoogleAuthProvider();
+            firebase.auth().signInWithPopup(provider).then(function(result) {
+                // Connexion réussie
+                document.getElementById('sendButton').disabled = false;
+            }).catch(function(error) {
+                console.error("Erreur lors de la connexion:", error);
+            });
+        }
+
+        function displayUserEntries(userId) {
+    // Référence à la base de données
+    var dialoguesRef = database.ref('Dialogue');
+
+    // Interroger la base de données pour les entrées avec le userid correspondant
+    dialoguesRef.orderByChild('userid').equalTo(userId).once('value').then(function(snapshot) {
+        var resultsDiv = document.getElementById('results');
+        resultsDiv.innerHTML = ''; // Vider la div pour les nouveaux résultats
+
+        snapshot.forEach(function(childSnapshot) {
+            var data = childSnapshot.val();
+            var entryDiv = document.createElement('div');
+            var videoElement = `
+<center>
+    <h2 style="color:gray;">Video No: ${data.id}</h2>
+
+                        <video width="320" height="240" controls>
+                            <source src="${data.url}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video> </center>
+                    `;
+            entryDiv.innerHTML = videoElement;
+
+            resultsDiv.appendChild(entryDiv);
+        });
+    });
+}
+
+        firebase.auth().onAuthStateChanged(function(user) {
+            updateLoginButton(user);
+
+    if (user) {
+        // Utilisateur connecté
+        document.getElementById('userIdDisplay').textContent = "User : " + user.uid;
+        addTokenForFirstTimeUser(user);
+        updateConnectionCount(user);
+
+        displayUserToken(user);
+        checkUserTokens(user);
+
+        console.log("L'utilisateur est connecté avec l'ID:", user.uid);
+        document.getElementById('sendButton').disabled = false;
+        userid = user.uid;
+
+        // Afficher les entrées pour cet utilisateur
+        displayUserEntries(user.uid);
+    } else {
+        // Utilisateur déconnecté
+        document.getElementById('sendButton').disabled = true;
+        document.getElementById('userIdDisplay').textContent = "Pas connecté";
+        document.getElementById('userTokenDisplay').textContent = "Token : 0";
+        document.getElementById('sendButton').disabled = true;
+
+    }
+});
+
+function checkUserTokens(user) {
+    var userRef = database.ref('user/' + user.uid + '/token');
+
+    // Récupérer la valeur du token pour cet utilisateur
+    userRef.once('value').then(function(snapshot) {
+        var tokenValue = snapshot.val();
+        var sendButton = document.getElementById('sendButton');
+
+        if (tokenValue && tokenValue >= 1) {
+            // Si l'utilisateur a 1 token ou plus, activer le bouton
+            sendButton.disabled = false;
+        } else {
+            // Si l'utilisateur a moins de 1 token, désactiver le bouton
+            sendButton.disabled = true;
+        }
+    });
+}
+
+function addTokenForFirstTimeUser(user) {
+    var userRef = database.ref('user/' + user.uid);
+
+    // Vérifier si l'utilisateur existe déjà
+    userRef.once('value').then(function(snapshot) {
+        if (!snapshot.exists()) {
+            // Si l'utilisateur n'existe pas (première connexion), ajouter le champ token
+            userRef.update({
+                token: 1
+            });
+        }
+    });
+}
+
+
+function updateConnectionCount(user) {
+    var userRef = database.ref('user/' + user.uid);
+
+    // Récupérer la valeur actuelle du compteur
+    userRef.once('value').then(function(snapshot) {
+        var currentCount = snapshot.val() ? snapshot.val().connectionCount : 0;
+        // Incrémenter le compteurp
+        console.log(currentCount);
+        if(currentCount == undefined){
+            currentCount = 0;
+        }
+        userRef.update({
+            connectionCount: currentCount + 1
+        });
+    });
+}
+
+
+function updateLoginButton(user) {
+    var loginButton = document.getElementById('loginButton');
+
+    if (user) {
+        // Si l'utilisateur est connecté
+        loginButton.textContent = "Logout Firebase";
+        loginButton.onclick = function() {
+            firebase.auth().signOut(); // Déconnecter l'utilisateur
+        };
+    } else {
+        // Si l'utilisateur est déconnecté
+        loginButton.textContent = "Login Firebase";
+        loginButton.onclick = function() {
+            loginFirebase(); // Connecter l'utilisateur
+        };
+    }
+}
+
+
+
+    function sendToFirebase() {
+
+
+        var user = firebase.auth().currentUser;
+
+if (user) {
+    decrementUserToken(user);
+
+
+    var messageName = document.getElementById('messageInput').value;
+    var caraName = document.getElementById('caraInput').value;
+    var moodName = document.getElementById('moodInput').value;
+    var audiencedName = document.getElementById('audienceInput').value;
+
+// Obtenir le nombre d'éléments dans "Dialogue"
+database.ref('Dialogue').once('value').then(function(snapshot) {
+    var count = snapshot.numChildren();
+
+    // Ajouter la nouvelle vidéo avec un ID basé sur le nombre d'éléments
+    var newId = count + 1;
+    database.ref('Dialogue/' + newId).set({
+        message: messageName,
+        cara: caraName,
+        mood: moodName,
+        audience: audiencedName,
+        id: newId,
+        userid : userid
+    });
+
+    console.log("ID check : " + newId);
+    // Écouter les modifications sur l'URL de la vidéo pour cet ID
+    database.ref('Dialogue/' + newId + '/url').on('value', function(snapshot) {
+        console.log("idokay");
+        var videoUrl = snapshot.val();
+        if (videoUrl) {
+            // Si l'URL de la vidéo est présente, ajoutez un lecteur vidéo à la page
+            var videoElement = `
+                <video width="320" height="240" controls>
+                    <source src="${videoUrl}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            `;
+            document.getElementById('videoPlayer').innerHTML = videoElement;
+        }
+    });
+    
+});} else {
+    console.error("L'utilisateur n'est pas connecté.");
+}
+
+
+    }
+
+    function displayUserToken(user) {
+    var userRef = database.ref('user/' + user.uid + '/token');
+
+    // Récupérer la valeur du token pour cet utilisateur
+    userRef.once('value').then(function(snapshot) {
+        var tokenValue = snapshot.val();
+        if (tokenValue) {
+            // Si le token existe, mettre à jour l'affichage
+            document.getElementById('userTokenDisplay').textContent = "Token : " + tokenValue;
+        } else {
+            // Si l'utilisateur n'a pas de token, afficher 0
+            document.getElementById('userTokenDisplay').textContent = "Token : 0";
+        }
+    });
+}
+function decrementUserToken(user) {
+    var userRef = database.ref('user/' + user.uid + '/token');
+
+    // Récupérer la valeur actuelle du token pour cet utilisateur
+    userRef.once('value').then(function(snapshot) {
+        var tokenValue = snapshot.val();
+
+        if (tokenValue && tokenValue > 0) {
+            // Si l'utilisateur a au moins 1 token, décrémenter la valeur
+            userRef.set(tokenValue - 1);
+        }
+    });
+}
+
+
+const stripe = Stripe('YOUR_STRIPE_PUBLIC_KEY'); // Remplacez par votre clé publique Stripe
+const payButton = document.getElementById('payButton');
+
+payButton.addEventListener('click', async () => {
+    // Créez un PaymentMethod avec Stripe
+    // Ici, pour simplifier, nous supposons que vous avez déjà un PaymentMethod ID
+    const paymentMethodId = 'YOUR_PAYMENT_METHOD_ID';
+
+    // Envoyez le PaymentMethod à votre backend (Firebase Cloud Function) pour effectuer le paiement
+    const response = await fetch('/path_to_your_cloud_function', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            paymentMethod: paymentMethodId,
+            amount: 1000,  // par exemple, pour 10.00 USD
+            currency: 'usd',
+        }),
+    });
+
+    const paymentResult = await response.json();
+    // Gérez le résultat du paiement (par exemple, affichez une confirmation ou une erreur)
+    if (paymentResult && paymentResult.status === 'succeeded') {
+        alert('Payement okay!');
+    } else {
+        alert('Payement problem.');
+    }
+});
+
+
+
+
+</script>
+
+</body>
+</html>
