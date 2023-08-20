@@ -24,6 +24,4 @@ Add API key into app.py
  Deploy the index.html locally or add website domain into autentification settings <br> <br>
  Run the python script "Python3 app.py"
 
- <h2>Example</h2>
-[![Watch the video](https://img.youtube.com/vi/T-D1KVIuvjA/maxresdefault.jpg)]([https://youtu.be/T-D1KVIuvjA](https://firebasestorage.googleapis.com/v0/b/chatbotsoloia.appspot.com/o/videos%2F97.mp4?alt=media)https://firebasestorage.googleapis.com/v0/b/chatbotsoloia.appspot.com/o/videos%2F97.mp4?alt=media)
 
