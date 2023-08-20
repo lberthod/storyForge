@@ -25,11 +25,5 @@ Add API key into app.py
  Run the python script "Python3 app.py"
 
  <h2>Example</h2>
- <center>
-    <h2 style="color:gray;">Video No: 1</h2>
+[![Watch the video](https://img.youtube.com/vi/T-D1KVIuvjA/maxresdefault.jpg)]([https://youtu.be/T-D1KVIuvjA](https://firebasestorage.googleapis.com/v0/b/chatbotsoloia.appspot.com/o/videos%2F97.mp4?alt=media)https://firebasestorage.googleapis.com/v0/b/chatbotsoloia.appspot.com/o/videos%2F97.mp4?alt=media)
 
-   <video width="320" height="240" controls>
-                            <source src="https://firebasestorage.googleapis.com/v0/b/chatbotsoloia.appspot.com/o/videos%2F97.mp4?alt=media" type="video/mp4">
-                            Your browser does not support the video tag.
-                        </video> 
-                       </center>
