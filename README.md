@@ -11,8 +11,8 @@ Create a firebase project. Add authentication, real-time firebase and storage <b
 Import the firebase config into the index.html <br>
 Import the firebase config into the app.py <br>
  <br> <br>
-Have OpenAI and ElevenLabs API.
-Add into app.py
+Have OpenAI and ElevenLabs API key .<br>
+Add API key into app.py
 
  <h2>Deploy</h2>
  Deploy the index.html locally or add website domain into autentification settings <br> <br>
