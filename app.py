@@ -43,7 +43,7 @@ def startGenerateVideo(message, cara, mood , audience, idtitle):
 
     question1a_template = PromptTemplate(
         input_variables = ['message' , 'cara' , 'mood', 'audience'],   
-        template="Write an original story of 500 characters, with a captivating plot and an unexpected conclusion. The story should really convey the following message: {message}. The story should include the following character traits: {cara}, and have a marked mood: {mood} and write for this kind of audience : {audience}.  You need to finish your sentence with a conclusion of your sentence.")
+        template="Write an original story of 500 characters, with a captivating plot and an unexpected conclusion. The story should really convey the following message: {message}. The story should include the following character traits: {cara},  and have a marked mood: {mood}. Do not include the words of the mood in the text of the story. the target audience is : {audience} but you do not  include the word of the audience in the story but keep in mind that the target audience.  You need to finish your sentence with a conclusion of your sentence.")
 
 
     listhistoire_template = PromptTemplate(
