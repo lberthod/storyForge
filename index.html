@@ -107,20 +107,15 @@
 
     <div class="parent-div">
         <div class="centered-div">
-            <h1 .id="center-div" >storyForge</h1>
+            <img src="logo.jpeg">
         </div>
     </div>
 
     <div class="parent-div">
         <div class="centered-div">
             <br> <br>
-            <p>
-                balbalbalalbalablblal 
-                balbalbalalbalablblal 
-                balbalbalalbalablblal 
-                balbalbalalbalablblal 
-                balbalbalalbalablblal 
-            </p>
+            <p style="color: black; font-size:larger;" >
+StoryForge is an agent to create image-bases video contents with AI, fore people and businesses with a message            </p>
             <br> <br>
             <button id="loginButton" style="background-color:white; color:black" onclick="loginFirebase()">Login Firebase</button> <br><br>
             <button disabled id="payButton" style="background-color:white; color:black"  >Buy Token</button>
@@ -134,23 +129,26 @@
         </div>
     </div>
     <div>
-   blablalbalbbalbalblabl 
-    </div>
+        Welcome to the heart of StoryForge, where your imagination meets our cutting-edge AI to bring your vision to life. Here, you're not just a viewer; <strong >you're the storyteller</strong>. By providing us with specific details in the prompt below, you pave the way for a one-of-a-kind experience. Dive deep into your thoughts, share your message, and let us transform your words into captivating image-based video content. Every story is unique, and with StoryForge, yours will shine like never before. Ready to embark on this creative journey? <strong >Let's forge your story together!</strong>
+
+ <br> <br> 
+
+        Please provide the necessary details below to craft your personalized image-based video content:    </div>
 
        <div class="parent-div">
         <div class="centered-div">
-            <h1>Prompt input</h1>
+            <h1>Describe your story</h1>
             What is your message :
             <textarea  id="messageInput" rows="4" cols="50" placeholder="your message"></textarea>
             <br>
-            What is the characteristics of story : 
+            What are the characteristics of story : 
             <textarea id="caraInput" rows="4" cols="50" placeholder="characteriscts of story"></textarea>
             <br>
             What is the general mood and style : 
             <textarea id="moodInput" rows="4" cols="50" placeholder=" mood and style"></textarea>
             <br>
-            What is the  : 
-            <textarea id="aaudienceudienceInput" rows="4" cols="50" placeholder="your audience, your public"></textarea>
+            What is the target audience : 
+            <textarea id="audienceInput" rows="4" cols="50" placeholder="your audience, your public"></textarea>
             <br><br>
             <button style="background-color:white; color:black"  id="sendButton" onclick="sendToFirebase()" disabled>Generate video  <br> (low quality voice)</button>
            <br> <br> 
@@ -164,7 +162,7 @@
 <br>    
 <div class="parent-div">
     <div class="centered-div">
-        <h1  >Previous videos   </h1>
+        <h1  >List of video   </h1>
     </div>
 </div>
 <div id="results">
@@ -173,7 +171,7 @@
     <script >
         // Configuration de Firebase
 var firebaseConfig = {
-//need to put yours
+//config
 };
 
 var userid = "";
